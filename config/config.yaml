@@ -76,12 +76,12 @@ enable:
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#co2-budget
 co2_budget:
-  2020: 0.701
-  2025: 0.524
-  2030: 0.297
-  2035: 0.150
-  2040: 0.071
-  2045: 0.032
+  # 2020: 0.701
+  # 2025: 0.524
+  # 2030: 0.297
+  # 2035: 0.150
+  # 2040: 0.071
+  # 2045: 0.032
   2050: 0.000
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#electricity
@@ -91,8 +91,8 @@ electricity:
   osm-prebuilt-version: 0.4
   gaslimit_enable: false
   gaslimit: false
-  co2limit_enable: false
-  co2limit: 7.75e+7
+  co2limit_enable: true
+  co2limit: 0
   co2base: 1.487e+9
 
   operational_reserve:
@@ -115,7 +115,7 @@ electricity:
   custom_powerplants: false
   everywhere_powerplants: []
 
-  conventional_carriers: [nuclear, oil, OCGT, CCGT, coal, lignite, geothermal, biomass]
+  conventional_carriers: []
   renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, offwind-float, hydro]
 
   estimate_renewable_capacities:
