@@ -21,9 +21,9 @@ remote:
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#run
 run:
   prefix: ""
-  name: ""
+  name: ['normal', 'no-offwind']
   scenarios:
-    enable: false
+    enable: true
     file: config/scenarios.yaml
   disable_progressbar: false
   shared_resources:
@@ -43,16 +43,14 @@ scenario:
   - vopt
   clusters:
   - 39
-  - 128
-  - 256
   opts:
-  - ''
+  - 'Co2L-175H-CCL'
+  # Co2L: activate limit in electricity.co2limit
+  # 4H: resample timeseries to 4H
+  # CCL: add minimum and maximum levels of generator nominal capacity via solving.agg_p_nom_limits
   sector_opts:
   - ''
   planning_horizons:
-  # - 2020
-  # - 2030
-  # - 2040
   - 2050
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#countries
@@ -92,7 +90,7 @@ electricity:
   gaslimit_enable: false
   gaslimit: false
   co2limit_enable: true
-  co2limit: 0
+  co2limit: 0  # activated if scenario.opts contains 'Co2L'
   co2base: 1.487e+9
 
   operational_reserve:
