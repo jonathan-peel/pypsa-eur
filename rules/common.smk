@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: : 2023-2024 The PyPSA-Eur Authors
+# SPDX-FileCopyrightText: Contributors to PyPSA-Eur <https://github.com/pypsa/pypsa-eur>
 #
 # SPDX-License-Identifier: MIT
 
@@ -98,9 +98,7 @@ def memory(w):
         if m is not None:
             factor *= int(m.group(1)) / 8760
             break
-    if w.clusters.endswith("m") or w.clusters.endswith("c"):
-        return int(factor * (55000 + 600 * int(w.clusters[:-1])))
-    elif w.clusters == "all":
+    if w.clusters == "all":
         return int(factor * (18000 + 180 * 4000))
     else:
         return int(factor * (10000 + 195 * int(w.clusters)))
@@ -144,7 +142,7 @@ def solved_previous_horizon(w):
 
     return (
         RESULTS
-        + "postnetworks/elec_s{simpl}_{clusters}_l{ll}_{opts}_{sector_opts}_"
+        + "networks/base_s_{clusters}_{opts}_{sector_opts}_"
         + planning_horizon_p
         + ".nc"
     )
