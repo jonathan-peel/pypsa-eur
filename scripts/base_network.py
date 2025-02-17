@@ -638,7 +638,7 @@ def _set_shapes(n, country_shapes, offshore_shapes):
     offshore_shapes = gpd.read_file(offshore_shapes).rename(columns={"name": "idx"})
     offshore_shapes["type"] = "offshore"
     all_shapes = pd.concat([country_shapes, offshore_shapes], ignore_index=True)
-    n.madd(
+    n.add(
         "Shape",
         all_shapes.index,
         geometry=all_shapes.geometry,
@@ -726,11 +726,11 @@ def base_network(
     time = get_snapshots(snakemake.params.snapshots, snakemake.params.drop_leap_day)
     n.set_snapshots(time)
 
-    n.import_components_from_dataframe(buses, "Bus")
-    n.import_components_from_dataframe(lines, "Line")
-    n.import_components_from_dataframe(transformers, "Transformer")
-    n.import_components_from_dataframe(links, "Link")
-    n.import_components_from_dataframe(converters, "Link")
+    n.add("Bus", buses.index, **buses)
+    n.add("Line", lines.index, **lines)
+    n.add("Transformer", transformers.index, **transformers)
+    n.add("Link", links.index, **links)
+    n.add("Link", converters.index, **converters)
 
     _set_lines_s_nom_from_linetypes(n)
     if config["electricity"].get("base_network") == "entsoegridkit":
@@ -919,12 +919,7 @@ if __name__ == "__main__":
     if "snakemake" not in globals():
         from _helpers import mock_snakemake
 
-        snakemake = mock_snakemake(
-            rulename="base_network",
-            root_dir="/Users/jopeel/Documents/Code/Development/balancing-act/balancing-act-pypsa-eur",
-            configfiles="config/config.yaml",
-            run="no-offwind"
-        )
+        snakemake = mock_snakemake("base_network")
     configure_logging(snakemake)
     set_scenario_config(snakemake)
 
