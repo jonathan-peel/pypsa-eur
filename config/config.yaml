@@ -21,7 +21,7 @@ remote:
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#run
 run:
   prefix: ""
-  name: ['normal', 'no-offwind']
+  name: ['all']
   scenarios:
     enable: true
     file: config/scenarios.yaml
@@ -107,7 +107,7 @@ electricity:
   custom_powerplants: false
   everywhere_powerplants: []
 
-  conventional_carriers: []
+  conventional_carriers: [nuclear, oil, OCGT, CCGT, coal, lignite, geothermal, biomass]
   renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, offwind-float, hydro]
 
   estimate_renewable_capacities:
@@ -437,10 +437,10 @@ existing_capacities:
 sector:
   transport: true
   heating: true
-  biomass: false
-  industry: false
-  agriculture: false
-  fossil_fuels: false
+  biomass: true
+  industry: true
+  agriculture: true
+  fossil_fuels: true
   district_heating:
     potential: 0.6
     progress:
@@ -833,7 +833,7 @@ industry:
 
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#costs
-costs:
+costs:  # data fetched from https://github.com/PyPSA/technology-data
   year: 2030
   version: v0.10.1
   social_discountrate: 0.02

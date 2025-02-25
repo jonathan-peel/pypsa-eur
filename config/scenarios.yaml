@@ -11,18 +11,11 @@
 #   electricity:
 #       renewable_carriers: [wind, solar] # override the list of renewable carriers
 
-normal:
+all:
   electricity:
     renewable_carriers:
     - solar
     - onwind
     - offwind-ac
     - offwind-dc
-    - hydro
-
-no-offwind:
-  electricity:
-    renewable_carriers:
-    - solar
-    - onwind
     - hydro
