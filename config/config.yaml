@@ -39,8 +39,6 @@ foresight: overnight
 scenario:
   simpl:
   - ''
-  ll:
-  - vopt  # is the line limit set in electricity.transmission_limit?
   clusters:
   - 39
   opts:
