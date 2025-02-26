@@ -39,18 +39,14 @@ foresight: overnight
 scenario:
   # if multiple values given, all combinations are run as different scenarios as different filenames
   clusters:
-  - 1 # European scale
-  opts: |
-    175H-   # resample timeseries
-    Co2L-   # activate limit in electricity.co2limit
-  sector_opts: |
-    175H-   # resample timeseries
-    Co2L0-  # set CO2 limit
+  - 2
+  opts: 175H-Co2L # resample to 175 hours, CO2 limit in electricity.co2limit
+  sector_opts: 175H-Co2L0 # resample to 175 hours, CO2 limit 0
   planning_horizons: # only used for sector-coupling studies
   - 2050
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#countries
-countries: ['AL', 'AT', 'BA', 'BE', 'BG', 'CH', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'ME', 'MK', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'SE', 'SI', 'SK', 'XK']
+countries: ['CH', 'DE']
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#snapshots
 snapshots:

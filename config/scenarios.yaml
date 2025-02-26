@@ -3,14 +3,6 @@
 #
 # SPDX-License-Identifier: `MIT
 
-# This file is used to define the scenarios that are run by snakemake. Each entry on the first level is a scenario. Each scenario can contain configuration overrides with respect to the config/config.yaml settings.
-#
-# Example
-#
-# custom-scenario: # name of the scenario
-#   electricity:
-#       renewable_carriers: [wind, solar] # override the list of renewable carriers
-
 full:
   electricity:
     renewable_carriers: [solar, onwind, offwind-ac, offwind-dc, hydro]
