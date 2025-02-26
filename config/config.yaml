@@ -19,15 +19,15 @@ remote:
   path: ""
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#run
-run:
-  prefix: ""
-  name: ['all']
+run: # for scenario configurations not covered by wildcards
+  prefix: "" # set a top-layer prefix for all scenarios (run (prefix) > scenarios)
+  name: all # run all scenarios in scenarios.yaml
   scenarios:
     enable: true
     file: config/scenarios.yaml
   disable_progressbar: false
   shared_resources:
-    policy: false
+    policy: false # whether resources should be shared across runs (not scenarios!)
     exclude: []
   shared_cutouts: true
 
@@ -37,18 +37,16 @@ foresight: overnight
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#scenario
 # Wildcard docs in https://pypsa-eur.readthedocs.io/en/latest/wildcards.html
 scenario:
-  simpl:
-  - ''
+  # if multiple values given, all combinations are run as different scenarios as different filenames
   clusters:
-  - 39
-  opts:
-  - 'Co2L-175H-CCL'
-  # Co2L: activate limit in electricity.co2limit
-  # 4H: resample timeseries to 4H
-  # CCL: add minimum and maximum levels of generator nominal capacity via solving.agg_p_nom_limits
-  sector_opts:
-  - ''
-  planning_horizons:
+  - 1 # European scale
+  opts: |
+    175H-   # resample timeseries
+    Co2L-   # activate limit in electricity.co2limit
+  sector_opts: |
+    175H-   # resample timeseries
+    Co2L0-  # set CO2 limit
+  planning_horizons: # only used for sector-coupling studies
   - 2050
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#countries
@@ -72,7 +70,7 @@ enable:
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#co2-budget
 co2_budget:
-  2050: 0.000
+  pass # only for pathway planning studies
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#electricity
 electricity:
@@ -81,59 +79,47 @@ electricity:
   osm-prebuilt-version: 0.6
   gaslimit_enable: false
   gaslimit: false
-  co2limit_enable: true
-  co2limit: 0  # activated if scenario.opts contains 'Co2L'
-  co2base: 1.487e+9
+  co2limit_enable: false # only for electricity-only studies
+  co2limit: false
+  co2base: false # only if relative emission reduction target specified in {opts}
 
   operational_reserve:
-    activate: false
-    epsilon_load: 0.02
-    epsilon_vres: 0.02
-    contingency: 4000
+    activate: false 
+    # Not relevant also don't really understand
 
   max_hours:
-    battery: 6
-    H2: 168
+    battery: 6 # short-tern
+    H2: 168 # long-term
 
   extendable_carriers:
-    Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, offwind-float, OCGT, CCGT]
-    StorageUnit: [] # battery, H2
-    Store: [battery, H2]
-    Link: [] # H2 pipeline
+    # any carrier not listed will be kept at base value, specified in conventional_carriers and renewable_carriers
+    pass # overwritten by scenarios.yaml
 
-  powerplants_filter: (DateOut >= 2024 or DateOut != DateOut) and not (Country == 'Germany' and Fueltype == 'Nuclear')
+  powerplants_filter: false
   custom_powerplants: false
-  everywhere_powerplants: []
+  everywhere_powerplants: [] # TODO: is this where I should add dispatachable generation?
 
-  conventional_carriers: [nuclear, oil, OCGT, CCGT, coal, lignite, geothermal, biomass]
-  renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, offwind-float, hydro]
+  # sets existing capacity in resources/powerplants_s_{clusters}.csv #TODO: why weren't hydros there by default?
+  conventional_carriers: [nuclear, oil, OCGT, CCGT, coal, lignite, geothermal, biomass, ror, PHS, hydro]
+  renewable_carriers: [] # overwritten by scenarios.yaml
 
   estimate_renewable_capacities:
-    enable: true
-    from_opsd: true
-    year: 2020
-    expansion_limit: false
-    technology_mapping:
-      Offshore: [offwind-ac, offwind-dc, offwind-float]
-      Onshore: [onwind]
-      PV: [solar]
+    enable: false # I want greenfield for all except hydro
 
-  autarky:
-    enable: false
-    by_country: false
+  autarky.enable: false
 
-  transmission_limit: vopt
+  transmission_limit: false # overwritten by scenarios.yaml
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#atlite
 atlite:
   default_cutout: europe-2013-sarah3-era5
   nprocesses: 4
-  show_progress: false
+  show_progress: true
   cutouts:
     # use 'base' to determine geographical bounds and time span from config
     # base:
       # module: era5
-    europe-2013-sarah3-era5:
+    europe-2013-sarah3-era5: # use this for custom weather data later
       module: [sarah, era5] # in priority order
       x: [-12., 42.]
       y: [33., 72.]
@@ -142,7 +128,7 @@ atlite:
       time: ['2013', '2013']
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#renewable
-renewable:
+renewable: # additional parameters for renewable carrier types
   onwind:
     cutout: europe-2013-sarah3-era5
     resource:
@@ -156,11 +142,11 @@ renewable:
       grid_codes: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32]
       distance: 1000
       distance_grid_codes: [1, 2, 3, 4, 5, 6]
-    luisa: false
+    luisa: false # specifies where you can build
       # grid_codes: [1111, 1121, 1122, 1123, 1130, 1210, 1221, 1222, 1230, 1241, 1242]
       # distance: 1000
       # distance_grid_codes: [1111, 1121, 1122, 1123, 1130, 1210, 1221, 1222, 1230, 1241, 1242]
-    natura: true
+    natura: true # exculde Natura 2000 protected areas
     excluder_resolution: 100
     clip_p_max_pu: 1.e-2
   offwind-ac:
@@ -199,27 +185,7 @@ renewable:
     excluder_resolution: 200
     clip_p_max_pu: 1.e-2
     landfall_length: 10
-  offwind-float:
-    cutout: europe-2013-sarah3-era5
-    resource:
-      method: wind
-      turbine: NREL_ReferenceTurbine_5MW_offshore
-      smooth: false
-      add_cutout_windspeed: true
-    # ScholzPhd Tab 4.3.1: 10MW/km^2
-    capacity_per_sqkm: 2
-    correction_factor: 0.8855
-    # proxy for wake losses
-    # from 10.1016/j.energy.2018.08.153
-    # until done more rigorously in #153
-    corine: [44, 255]
-    natura: true
-    ship_threshold: 400
-    excluder_resolution: 200
-    min_depth: 60
-    max_depth: 1000
-    clip_p_max_pu: 1.e-2
-    landfall_length: 10
+  # offshore floating wind removed
   solar:
     cutout: europe-2013-sarah3-era5
     resource:
@@ -253,7 +219,7 @@ renewable:
   hydro:
     cutout: europe-2013-sarah3-era5
     carriers: [ror, PHS, hydro]
-    PHS_max_hours: 6
+    PHS_max_hours: 6d
     hydro_max_hours: "energy_capacity_totals_by_country" # one of energy_capacity_totals_by_country, estimate_by_large_installations or a float
     flatten_dispatch: false
     flatten_dispatch_buffer: 0.2
@@ -263,11 +229,9 @@ renewable:
     eia_approximate_missing: false
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#conventional
-conventional:
+conventional: # additional parameters for conventional carrier types (limits on nuclear removed)
   unit_commitment: false
   dynamic_fuel_price: false
-  nuclear:
-    p_max_pu: "data/nuclear_p_max_pu.csv" # float of file name
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#lines
 lines:
@@ -286,14 +250,10 @@ lines:
   reconnect_crimea: true
   under_construction: 'keep' # 'zero': set capacity to zero, 'remove': remove, 'keep': with full capacity for lines in grid extract
   dynamic_line_rating:
-    activate: false
-    cutout: europe-2013-sarah3-era5
-    correction_factor: 0.95
-    max_voltage_difference: false
-    max_line_rating: false
+    activate: false # too detailed for this study
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#links
-links:
+links: # like lines but more customisable - for HVDC?
   p_max_pu: 1.0
   p_nom_max: .inf
   max_extension: 30000 #MW
@@ -301,7 +261,7 @@ links:
   under_construction: 'keep' # 'zero': set capacity to zero, 'remove': remove, 'keep': with full capacity for lines in grid extract
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#transmission_projects
-transmission_projects:
+transmission_projects: # add transmission projects to base network
   enable: true
   include:
     tyndp2020: true
@@ -337,29 +297,29 @@ load:
     population: 0.4
 
 # docs
-# TODO: PyPSA-Eur merge issue in prepare_sector_network.py
-# regulate what components with which carriers are kept from PyPSA-Eur;
-# some technologies are removed because they are implemented differently
-# (e.g. battery or H2 storage) or have different year-dependent costs
-# in PyPSA-Eur-Sec
-pypsa_eur:
-  Bus:
-  - AC
-  Link:
-  - DC
-  Generator:
-  - onwind
-  - offwind-ac
-  - offwind-dc
-  - offwind-float
-  - solar-hsat
-  - solar
-  - ror
-  - nuclear
-  StorageUnit:
-  - PHS
-  - hydro
-  Store: []
+# # TODO: PyPSA-Eur merge issue in prepare_sector_network.py
+# # regulate what components with which carriers are kept from PyPSA-Eur;
+# # some technologies are removed because they are implemented differently
+# # (e.g. battery or H2 storage) or have different year-dependent costs
+# # in PyPSA-Eur-Sec
+# pypsa_eur:
+#   Bus:
+#   - AC
+#   Link:
+#   - DC
+#   Generator:
+#   - onwind
+#   - offwind-ac
+#   - offwind-dc
+#   - offwind-float
+#   - solar-hsat
+#   - solar
+#   - ror
+#   - nuclear
+#   StorageUnit:
+#   - PHS
+#   - hydro
+#   Store: []
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#energy
 energy:
@@ -831,6 +791,7 @@ industry:
 
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#costs
+# TODO: decide on costs if any
 costs:  # data fetched from https://github.com/PyPSA/technology-data
   year: 2030
   version: v0.10.1
@@ -900,42 +861,31 @@ solving:
   #tmpdir: "path/to/tmp"
   options:
     clip_p_max_pu: 1.e-2
-    load_shedding: false
-    curtailment_mode: false
-    noisy_costs: true
+    load_shedding: true # set directly to fload to denote marginal cost
+    curtailment_mode: true
+    noisy_costs: false
     skip_iterations: true
     rolling_horizon: false
     seed: 123
     custom_extra_functionality: "../data/custom_extra_functionality.py"
-    # io_api: "direct"  # Increases performance but only supported for the highs and gurobi solvers
+    io_api: "direct"  # Increases performance but only supported for the highs and gurobi solvers
     # options that go into the optimize function
     track_iterations: false
     min_iterations: 2
     max_iterations: 3
     transmission_losses: 2
     linearized_unit_commitment: true
-    horizon: 365
+    # horizon: 365 # not sure how to use this but could be very important
     post_discretization:
-      enable: false
-      line_unit_size: 1700
-      line_threshold: 0.3
-      link_unit_size:
-        DC: 2000
-        H2 pipeline: 1200
-        gas pipeline: 1500
-      link_threshold:
-        DC: 0.3
-        H2 pipeline: 0.3
-        gas pipeline: 0.3
-      fractional_last_unit_size: false
+      enable: false # if you e.g., 3 x 1 MW of lines instead of 2.7 MW
 
-  agg_p_nom_limits:
+  agg_p_nom_limits: # TODO: add later
     agg_offwind: false
     include_existing: false
     file: data/agg_p_nom_minmax.csv
 
   constraints:
-    CCL: false
+    CCL: false # TODO: add later
     EQ: false
     BAU: false
     SAFE: false

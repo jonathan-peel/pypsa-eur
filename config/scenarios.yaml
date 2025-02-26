@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: : 2017-2023 The PyPSA-Eur Authors
 #
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: `MIT
 
 # This file is used to define the scenarios that are run by snakemake. Each entry on the first level is a scenario. Each scenario can contain configuration overrides with respect to the config/config.yaml settings.
 #
@@ -11,11 +11,12 @@
 #   electricity:
 #       renewable_carriers: [wind, solar] # override the list of renewable carriers
 
-all:
+full:
   electricity:
-    renewable_carriers:
-    - solar
-    - onwind
-    - offwind-ac
-    - offwind-dc
-    - hydro
+    renewable_carriers: [solar, onwind, offwind-ac, offwind-dc, hydro]
+    extendable_carriers:
+      Generator: [solar, onwind, offwind-ac, offwind-dc] # omit hydro
+      StorageUnit: [battery] # a storage unit with inherent power conversion; e_nom and p_nom connected via e_nom = p_nom * max_hours so extending requires high investment in both
+      Store: [H2] # storage without inherent power conversion; sets e_nom
+      Link: [H2 pipeline] # sets p_nom
+    transmission_limit: vopt
