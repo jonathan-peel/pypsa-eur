@@ -5,6 +5,7 @@
 
 full:
   electricity:
+    conventional_carriers: []
     renewable_carriers: [solar, onwind, offwind-ac, offwind-dc, hydro]
     extendable_carriers:
       Generator: [solar, onwind, offwind-ac, offwind-dc] # omit hydro
