@@ -40,8 +40,8 @@ scenario:
   # if multiple values given, all combinations are run as different scenarios as different filenames
   clusters:
   - 2
-  opts: 175H-Co2L # resample to 175 hours, CO2 limit in electricity.co2limit
-  sector_opts: 175H-Co2L0 # resample to 175 hours, CO2 limit 0
+  opts: 68H-Co2L # resample to 175 hours, CO2 limit in electricity.co2limit
+  sector_opts: 68H-Co2L0 # resample to 175 hours, CO2 limit 0
   planning_horizons: # only used for sector-coupling studies
   - 2050
 
