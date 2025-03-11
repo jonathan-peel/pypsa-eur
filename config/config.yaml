@@ -96,7 +96,7 @@ electricity:
   everywhere_powerplants: [] # TODO: is this where I should add dispatachable generation?
 
   # sets existing capacity in resources/powerplants_s_{clusters}.csv #TODO: why weren't hydros there by default?
-  conventional_carriers: [nuclear, oil, OCGT, CCGT, coal, lignite, geothermal, biomass, ror, PHS, hydro]
+  conventional_carriers: []
   renewable_carriers: [] # overwritten by scenarios.yaml
 
   estimate_renewable_capacities:
