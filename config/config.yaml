@@ -857,7 +857,7 @@ solving:
   #tmpdir: "path/to/tmp"
   options:
     clip_p_max_pu: 1.e-2
-    load_shedding: true # set directly to fload to denote marginal cost
+    load_shedding: 1e9 # true => 100 eur/kWh, set directly to float to denote marginal cost # 1e9 Eur/kWh = 1e12 Eur/MWh
     curtailment_mode: true
     noisy_costs: false
     skip_iterations: true
