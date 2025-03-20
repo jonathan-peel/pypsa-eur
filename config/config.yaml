@@ -874,13 +874,13 @@ solving:
     post_discretization:
       enable: false # if you e.g., 3 x 1 MW of lines instead of 2.7 MW
 
-  agg_p_nom_limits: # TODO: add later
-    agg_offwind: false
-    include_existing: false
+  agg_p_nom_limits: 
+    agg_offwind: true
+    include_existing: false # TODO: make true? But causes error in add_CCL_constraints
     file: data/agg_p_nom_minmax.csv
 
   constraints:
-    CCL: false # TODO: add later
+    CCL: true
     EQ: false
     BAU: false
     SAFE: false
