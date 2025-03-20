@@ -31,7 +31,7 @@ benchmarks = path_provider("benchmarks/", RDIR, shared_resources, exclude_from_s
 resources = path_provider("resources/", RDIR, shared_resources, exclude_from_shared)
 
 CDIR = "" if run["shared_cutouts"] else RDIR
-RESULTS = "results/" + RDIR # if config.run.scenarios.enable is true, RESULTS is "results/{prefix}/{scenario}/"
+RESULTS = "results/" + RDIR # if run.scenarios.enable is true, RESULTS is "results/{run.prefix}/{scenario_name}/"
 
 
 localrules:
