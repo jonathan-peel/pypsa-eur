@@ -488,7 +488,7 @@ def add_CCL_constraints(n, config):
             "offwind": "offwind-all",
         }
         gens = gens.replace(rename_offwind)
-    grouper = pd.concat([gens.bus.map(n.buses.country), gens.carrier], axis=1)
+    grouper = pd.concat([gens.bus.map(n.buses.country), gens.carrier], axis=1) # TODO: change this line to sum over all countries?
     lhs = p_nom.groupby(grouper).sum().rename(bus="country")
 
     if config["solving"]["agg_p_nom_limits"]["include_existing"]:
