@@ -1073,13 +1073,12 @@ if __name__ == "__main__":
         from _helpers import mock_snakemake
 
         snakemake = mock_snakemake(
-            "solve_sector_network_perfect",
-            configfiles="../config/test/config.perfect.yaml",
-            opts="",
-            clusters="5",
-            ll="v1.0",
-            sector_opts="",
-            # planning_horizons="2030",
+            rulename="solve_network",
+            root_dir="/Users/jopeel/Documents/Code/Development/ml-res/ml-res-minimal",
+            configfiles="/Users/jopeel/Documents/Code/Development/ml-res/ml-res-minimal/config/config.yaml",
+            opts="68H-Co2L",
+            clusters="2",
+            run="full",
         )
     configure_logging(snakemake)
     set_scenario_config(snakemake)
