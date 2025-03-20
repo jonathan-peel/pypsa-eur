@@ -476,7 +476,7 @@ def add_CCL_constraints(n, config):
     """
     agg_p_nom_minmax = pd.read_csv(
         config["solving"]["agg_p_nom_limits"]["file"], index_col=[0, 1], header=[0, 1]
-    )[snakemake.wildcards.planning_horizons]
+    )[snakemake.params.planning_horizons]
     logger.info("Adding generation capacity constraints per carrier and country")
     p_nom = n.model["Generator-p_nom"]
 
@@ -497,7 +497,7 @@ def add_CCL_constraints(n, config):
         )
         gens_cst = gens_cst[
             (gens_cst["build_year"] + gens_cst["lifetime"])
-            >= int(snakemake.wildcards.planning_horizons)
+            >= int(snakemake.params.planning_horizons)
         ]
         if config["solving"]["agg_p_nom_limits"]["agg_offwind"]:
             gens_cst = gens_cst.replace(rename_offwind)
