@@ -1,0 +1,47 @@
+# docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html
+
+run:
+  prefix: "ac_dc_solar_wind_dist"
+  shared_resources:
+    policy: true
+  use_shadow_directory: true
+
+scenario:
+  clusters: [3]
+
+countries: ["DE", "CH"]
+
+electricity:
+  renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc]
+  extendable_carriers:
+    Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc]
+  estimate_renewable_capacities:
+    enable: false
+  transmission_limit: c1.25
+
+transmission_projects:
+  enable: true
+  include:
+    tyndp2020: true
+    nep: true
+    manual: true
+  skip: []
+  status: [under_construction, in_permitting, confirmed, planned_not_yet_permitted, under_consideration]
+  new_link_capacity: keep #keep or zero
+
+pypsa_eur:
+  Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc]
+  Link: [DC]
+  Line: [AC]
+
+clustering:
+  temporal:
+    resolution_sector: "24H"
+
+sector:
+  electricity_transmission_grid: true
+  electricity_distribution_grid: true
+
+solving:
+  solver:
+    name: highs
