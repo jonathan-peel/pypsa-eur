@@ -20,7 +20,7 @@ remote:
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#run
 run:
-  prefix: ""
+  prefix: "nothing"
   name: ""
   scenarios:
     enable: false
@@ -36,51 +36,13 @@ foresight: overnight
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#scenario
 scenario:
-  clusters:
-  - 50
-  opts:
-  - ""
-  sector_opts:
-  - ""
-  planning_horizons:
-  - 2050
+  clusters: [1]
+  opts: ['']
+  sector_opts: ['']
+  planning_horizons: [2050]
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#countries
-countries:
-- AL
-- AT
-- BA
-- BE
-- BG
-- CH
-- CZ
-- DE
-- DK
-- EE
-- ES
-- FI
-- FR
-- GB
-- GR
-- HR
-- HU
-- IE
-- IT
-- LT
-- LU
-- LV
-- ME
-- MK
-- NL
-- 'NO'
-- PL
-- PT
-- RO
-- RS
-- SE
-- SI
-- SK
-- XK
+countries: ["DE"]
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#snapshots
 snapshots:
@@ -127,42 +89,20 @@ electricity:
     battery: 6
     H2: 168
   extendable_carriers:
-    Generator:
-    - solar
-    - "solar-hsat"
-    - onwind
-    - "offwind-ac"
-    - "offwind-dc"
-    - "offwind-float"
-    - OCGT
-    - CCGT
+    Generator: []
     StorageUnit: []
-    Store:
-    - battery
-    - H2
+    Store: []
     Link: []
-  powerplants_filter: "(DateOut >= 2024 or DateOut != DateOut) and not (Country == 'Germany' and Fueltype == 'Nuclear')"
+
+  powerplants_filter: false
   custom_powerplants: false
   everywhere_powerplants: []
-  conventional_carriers:
-  - nuclear
-  - oil
-  - OCGT
-  - CCGT
-  - coal
-  - lignite
-  - geothermal
-  - biomass
-  renewable_carriers:
-  - solar
-  - "solar-hsat"
-  - onwind
-  - "offwind-ac"
-  - "offwind-dc"
-  - "offwind-float"
-  - hydro
+
+  conventional_carriers: []
+  renewable_carriers: []
+
   estimate_renewable_capacities:
-    enable: true
+    enable: false
     from_gem: true
     year: 2020
     expansion_limit: false
@@ -462,7 +402,7 @@ links:
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#transmission_projects
 transmission_projects:
-  enable: true
+  enable: false
   include:
     tyndp2020: true
     nep: true
@@ -497,23 +437,13 @@ load:
     population: 0.4
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#pypsa_eur
+# regulate what components with which carriers are kept from PyPSA-Eur; some technologies are removed because they are implemented differently (e.g. battery or H2 storage) or have different year-dependent costs in PyPSA-Eur-Sec. If a category isn't mentioned, all its components are automatically transferred to SC model.
 pypsa_eur:
-  Bus:
-  - AC
-  Link:
-  - DC
-  Generator:
-  - onwind
-  - "offwind-ac"
-  - "offwind-dc"
-  - "offwind-float"
-  - "solar-hsat"
-  - solar
-  - ror
-  - nuclear
-  StorageUnit:
-  - PHS
-  - hydro
+  Bus: [AC]
+  Link: []
+  Line: []
+  Generator: []
+  StorageUnit: []
   Store: []
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#energy
@@ -613,14 +543,14 @@ existing_capacities:
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#sector
 sector:
-  transport: true
-  heating: true
-  biomass: true
-  industry: true
-  shipping: true
-  aviation: true
-  agriculture: true
-  fossil_fuels: true
+  transport: false
+  heating: false
+  biomass: false
+  industry: false
+  shipping: false
+  aviation: false
+  agriculture: false
+  fossil_fuels: false
   district_heating:
     potential: 0.6
     progress:
@@ -723,14 +653,14 @@ sector:
   ICE_upper_degree_factor: 1.6
   EV_lower_degree_factor: 0.98
   EV_upper_degree_factor: 0.63
-  bev_dsm: true
+  bev_dsm: false
   bev_dsm_availability: 0.5
   bev_energy: 0.05
   bev_charge_efficiency: 0.9
   bev_charge_rate: 0.011
   bev_avail_max: 0.95
   bev_avail_mean: 0.8
-  v2g: true
+  v2g: false
   land_transport_fuel_cell_share:
     2020: 0
     2025: 0
@@ -812,40 +742,40 @@ sector:
     annualise_cost: true
     tax_weighting: false
     construction_index: true
-  tes: true
-  boilers: true
-  resistive_heaters: true
+  tes: false
+  boilers: false
+  resistive_heaters: false
   oil_boilers: false
-  biomass_boiler: true
+  biomass_boiler: false
   overdimension_heat_generators:
     decentral: 1.1
     central: 1.0
   chp:
-    enable: true
+    enable: false
     fuel:
-    - solid biomass
-    - gas
-    micro_chp: false
-  solar_thermal: true
-  solar_cf_correction: 0.788457
-  methanation: true
+    - solid biomass # For solid biomass, CHP with and without CC are added
+    - gas # For all other fuels the same techno economic data from gas CHP is taken
+    micro_chp: false # Only gas is used for micro_chp
+  solar_thermal: false
+  solar_cf_correction: 0.788457  # =  >>> 1/1.2683
+  methanation: false
   coal_cc: false
-  dac: true
+  dac: false
   co2_vent: false
   heat_vent:
-    urban central: true
-    urban decentral: true
-    rural: true
+    urban central: false
+    urban decentral: false
+    rural: false
   marginal_cost_heat_vent: 0.02
   allam_cycle_gas: false
-  hydrogen_fuel_cell: true
-  hydrogen_turbine: true
-  SMR: true
-  SMR_cc: true
-  regional_oil_demand: true
+  hydrogen_fuel_cell: false
+  hydrogen_turbine: false
+  SMR: false
+  SMR_cc: false
+  regional_oil_demand: false
   regional_coal_demand: false
   regional_co2_sequestration_potential:
-    enable: true
+    enable: false
     attribute:
     - conservative estimate Mt
     - conservative estimate GAS Mt
@@ -865,11 +795,11 @@ sector:
     2050: 250
   co2_sequestration_cost: 30
   co2_sequestration_lifetime: 50
-  co2_spatial: true
-  co2_network: true
+  co2_spatial: false
+  co2_network: false
   co2_network_cost_factor: 1
   cc_fraction: 0.9
-  hydrogen_underground_storage: true
+  hydrogen_underground_storage: false
   hydrogen_underground_storage_locations:
   - onshore
   - nearshore
@@ -881,11 +811,11 @@ sector:
     methanol_to_power:
       ccgt: false
       ccgt_cc: false
-      ocgt: true
+      ocgt: false
       allam: false
-    biomass_to_methanol: true
+    biomass_to_methanol: false
     biomass_to_methanol_cc: false
-  ammonia: true
+  ammonia: false
   min_part_load_electrolysis: 0
   min_part_load_fischer_tropsch: 0.5
   min_part_load_methanolisation: 0.3
@@ -896,10 +826,10 @@ sector:
   use_methanation_waste_heat: 0.25
   use_fuel_cell_waste_heat: 1
   use_electrolysis_waste_heat: 0.25
-  electricity_transmission_grid: true
-  electricity_distribution_grid: true
+  electricity_transmission_grid: false
+  electricity_distribution_grid: false
   electricity_distribution_grid_cost_factor: 1.0
-  electricity_grid_connection: true
+  electricity_grid_connection: false
   transmission_efficiency:
     enable:
     - DC
@@ -917,23 +847,23 @@ sector:
       compression_per_1000km: 0.01
     electricity distribution grid:
       efficiency_static: 0.97
-  H2_network: true
-  gas_network: true
+  H2_network: false
+  gas_network: false
   H2_retrofit: false
   H2_retrofit_capacity_per_CH4: 0.6
   gas_network_connectivity_upgrade: 1
-  gas_distribution_grid: true
+  gas_distribution_grid: false
   gas_distribution_grid_cost_factor: 1.0
-  biomass_spatial: true
+  biomass_spatial: false
   biomass_transport: false
-  biogas_upgrading: true
+  biogas_upgrading: false
   biogas_upgrading_cc: false
-  conventional_generation:
-    OCGT: gas
-    CCGT: gas
-  biomass_to_liquid: true
+  conventional_generation: {}
+    # OCGT: gas
+    # CCGT: gas
+  biomass_to_liquid: false
   biomass_to_liquid_cc: false
-  electrobiofuels: true
+  electrobiofuels: false
   biosng: false
   biosng_cc: false
   bioH2: false
@@ -1130,7 +1060,7 @@ adjustments:
 solving:
   options:
     clip_p_max_pu: 0.01
-    load_shedding: false
+    load_shedding: true
     curtailment_mode: false
     noisy_costs: true
     skip_iterations: true
