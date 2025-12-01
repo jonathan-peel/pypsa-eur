@@ -1,7 +1,7 @@
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html
 
 run:
-  prefix: "ac_dc_solar_wind_dist"
+  prefix: "ac_dc_solar_wind_heat"
   shared_resources:
     policy: true
   use_shadow_directory: true
@@ -39,8 +39,11 @@ clustering:
     resolution_sector: "24H"
 
 sector:
+  heating: true
+  fossil_fuels: false
+  dac: false
   electricity_transmission_grid: true
-  electricity_distribution_grid: true
+  electricity_distribution_grid: false
 
 solving:
   solver:
