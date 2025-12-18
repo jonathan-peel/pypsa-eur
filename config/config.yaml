@@ -1,7 +1,7 @@
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html
 
 run:
-  prefix: "ac_dc_solar_wind_heat"
+  prefix: "ac_dc_vre_dstbtn_tnspt_heat_fssl_ccgt_gas_cc"
   shared_resources:
     policy: true
   use_shadow_directory: true
@@ -12,7 +12,7 @@ scenario:
 countries: ["DE", "CH"]
 
 electricity:
-  renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc]
+  renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, hydro]
   extendable_carriers:
     Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc]
   estimate_renewable_capacities:
@@ -23,28 +23,31 @@ transmission_projects:
   enable: true
   include:
     tyndp2020: true
-    nep: true
-    manual: true
-  skip: []
-  status: [under_construction, in_permitting, confirmed, planned_not_yet_permitted, under_consideration]
-  new_link_capacity: keep #keep or zero
 
 pypsa_eur:
-  Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc]
+  Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, ror]
+  StorageUnit: [PHS, hydro]
   Link: [DC]
   Line: [AC]
 
 clustering:
   temporal:
-    resolution_sector: "24H"
+    resolution_sector: 24H  # limit of diurnal storage (Mai, 2022)
 
 sector:
+  transport: true
+
   heating: true
-  fossil_fuels: false
+  district_heating:
+    potential: 0.6
+  time_dep_hp_cop: true
+
+  fossil_fuels: true
+  conventional_generation: {OCGT_CC: gas, CCGT_CC: gas}
+
+  gas_network: true
+  gas_distribution_grid: false
+
   dac: false
   electricity_transmission_grid: true
-  electricity_distribution_grid: false
-
-solving:
-  solver:
-    name: highs
+  electricity_distribution_grid: true
