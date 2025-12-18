@@ -552,7 +552,7 @@ sector:
   agriculture: false
   fossil_fuels: false
   district_heating:
-    potential: 0.6
+    potential: 0
     progress:
       2020: 0.0
       2025: 0.1
