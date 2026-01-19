@@ -1,7 +1,7 @@
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html
 
 run:
-  prefix: "ac_dc_vre_dstbtn_tnspt_heat_indstr_bmss_ccgt_gas"
+  prefix: "ac_dc_vre_dstbtn_tnspt_heat_bmss"
   shared_resources:
     policy: true
   use_shadow_directory: true
@@ -42,9 +42,9 @@ sector:
     potential: 0.6
   time_dep_hp_cop: true
 
-  industry: true
   biomass: true
-  conventional_generation: {CCGT: gas} # required for industry (to create EU gas bus)
+  industry: false
+  # conventional_generation: {CCGT: gas} # required for industry (to create EU gas bus)
 
   dac: false
   electricity_transmission_grid: true
