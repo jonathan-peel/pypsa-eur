@@ -1,15 +1,18 @@
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html
 
 run:
-  prefix: "ac_dc_vre_dstbtn_tnspt_heat_bmss"
+  prefix: "ac_dc_vre_dstbtn_tnspt_heat_bmss_indstr_meth_dac_gasnet"
   shared_resources:
     policy: true
   use_shadow_directory: true
 
 scenario:
-  clusters: [3]
+  clusters: [2]
 
 countries: ["DE", "CH"]
+
+co2_budget:
+  2050: 0
 
 electricity:
   renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, hydro]
@@ -43,9 +46,21 @@ sector:
   time_dep_hp_cop: true
 
   biomass: true
-  industry: false
-  # conventional_generation: {CCGT: gas} # required for industry (to create EU gas bus)
 
-  dac: false
+  industry: true # only works because of code changes (remove once PR accepted)
+  ammonia: false # NB. industrial/fertiliser demand for ammonia counted using H2 and elec. demand
+  SMR: false # green H2 only
+  SMR_cc: false
+  methanation: true
+
+  fossil_fuels: false # TODO: change to only supply methane for gas CCGT_CC
+  gas_network: true
+
+  dac: true
+  co2_network: false # true
+
+  H2_network: false # true
+  H2_retrofit: false # true
+
   electricity_transmission_grid: true
   electricity_distribution_grid: true
