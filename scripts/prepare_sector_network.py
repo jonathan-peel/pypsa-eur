@@ -2175,7 +2175,7 @@ def add_h2_gas_infrastructure(
         n.add(
             "Link",
             spatial.nodes,
-            suffix=" gas_ccgt_cc",
+            suffix=" CCGT CC",
             bus0=spatial.gas.nodes,
             bus1=spatial.nodes,
             bus2=spatial.co2.df.loc[spatial.nodes, "nodes"].values,
@@ -2185,7 +2185,7 @@ def add_h2_gas_infrastructure(
             efficiency=costs.at["CCGT", "efficiency"] - efficiency_penalty,
             efficiency2=co2_captured,
             efficiency3=costs.at["gas", "CO2 intensity"] * (1 - capture_rate),
-            carrier="gas_ccgt_cc",
+            carrier="gas CCGT CC",
             p_nom_extendable=True,
             lifetime=costs.at["CCGT", "lifetime"],
         )
