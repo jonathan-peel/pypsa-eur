@@ -88,6 +88,7 @@ electricity:
 
   extendable_carriers:
     # any carrier not listed will be kept at base value, specified in conventional_carriers and renewable_carriers
+    # TODO: maybe it's better to leave the default values because we want carriers to grow all over europe and limit the total amount via the extra constraints
     pass # overwritten by scenarios.yaml
 
   powerplants_filter: false
@@ -101,8 +102,8 @@ electricity:
   estimate_renewable_capacities:
     enable: false # I want greenfield for all except hydro
 
-  autarky.enable: false
-
+  autarky:
+    enable: false
   transmission_limit: false # overwritten by scenarios.yaml
 
 # docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html#atlite
