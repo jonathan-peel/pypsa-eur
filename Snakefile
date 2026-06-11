@@ -24,14 +24,13 @@ from scripts._helpers import (
 from scripts.lib.validation.config import validate_config
 
 
-configfile: "config/config.default.yaml"
+configfile: "config/config.nothing.yaml"
 configfile: "config/plotting.default.yaml"
 
-
-if Path("config/config.yaml").exists():
-
-    configfile: "config/config.yaml"
-
+if Path("config/config.override.yaml").exists():
+    with open("config/config.override.yaml") as f:
+        config_overrides = yaml.safe_load(f)
+    update_config(config, config_overrides)
 
 validate_config(config)
 
