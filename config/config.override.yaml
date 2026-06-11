@@ -1,0 +1,72 @@
+# docs in https://pypsa-eur.readthedocs.io/en/latest/configuration.html
+
+run:
+  use_shadow_directory: true
+
+scenario:
+  clusters: [2] # [50]
+
+countries: [DE, CH] # [AL, AT, BA, BE, BG, CH, CZ, DE, DK, EE, ES, FI, FR, GB, GR, HR, HU, IE, IT, LT, LU, LV, ME, MK, NL, 'NO', PL, PT, RO, RS, SE, SI, SK]
+
+co2_budget:
+  2050: 0
+
+electricity:
+  renewable_carriers: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, hydro]
+  extendable_carriers:
+    Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc]
+  estimate_renewable_capacities:
+    enable: false
+  transmission_limit: c1.25
+
+transmission_projects:
+  enable: true
+  include:
+    tyndp2020: true
+
+pypsa_eur:
+  Generator: [solar, solar-hsat, onwind, offwind-ac, offwind-dc, ror]
+  StorageUnit: [PHS, hydro]
+  Link: [DC]
+  Line: [AC]
+
+clustering:
+  temporal:
+    resolution_sector: 3H  # limit of diurnal storage (Mai, 2022) is 24H; 3H justified in Gotske, 2024
+
+sector:
+  transport: true
+
+  heating: true
+  district_heating:
+    potential: 0.6
+  time_dep_hp_cop: true
+
+  biomass: true
+
+  industry: true
+  ammonia: false  # NB. industrial/fertiliser demand for ammonia counted using H2 and elec. demand
+  SMR: false  # green H2 only
+  SMR_cc: false
+  methanation: true
+
+  fossil_fuels: true
+  gas_network: true
+  conventional_generation: {OCGT: gas}
+
+  dac: true
+  co2_spatial: true # needed if co2_network is true (bug)
+  co2_network: true
+  regional_oil_demand: true  # needed if co2_network is true (bug)
+
+  H2_network: true
+  H2_retrofit: true
+  hydrogen_turbine: true
+  hydrogen_fuel_cell: true
+
+  electricity_transmission_grid: true
+  electricity_distribution_grid: true
+
+solving:
+  options:
+    custom_extra_functionality: ../my_scripts/custom_script.py
